@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class SelectExerciseActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var exerciseAdapter: ExerciseAdapter
+    private lateinit var exerciseAdapter: SelectableExerciseAdapter
     private val selectedExercises = mutableListOf<Exercise>()
     private lateinit var database: AppDatabase
 
@@ -24,7 +24,7 @@ class SelectExerciseActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.exercisesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        exerciseAdapter = ExerciseAdapter(mutableListOf()) { exercise, isSelected ->
+        exerciseAdapter = SelectableExerciseAdapter(mutableListOf()) { exercise, isSelected ->
             if (isSelected) {
                 selectedExercises.add(exercise)
             } else {
@@ -46,7 +46,7 @@ class SelectExerciseActivity : AppCompatActivity() {
     private fun loadExercises() {
         lifecycleScope.launch {
             val exercises = database.exerciseDao().getAll()
-            exerciseAdapter.updateExercises(exercises)
+            exerciseAdapter.setItems(exercises)
         }
     }
 }

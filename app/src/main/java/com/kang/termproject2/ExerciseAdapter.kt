@@ -3,25 +3,20 @@ package com.kang.termproject2
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class ExerciseAdapter(
     private var exercises: MutableList<Exercise>,
-    private val onSelect: (Exercise, Boolean) -> Unit
+    private val onItemLongClick: (Exercise) -> Unit
 ) : RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {
 
-    private var selectedPositions = HashSet<Int>()
-
     class ExerciseViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(exercise: Exercise, isSelected: Boolean, onSelect: (Exercise, Boolean) -> Unit) {
+        fun bind(exercise: Exercise, onItemLongClick: (Exercise) -> Unit) {
             view.findViewById<TextView>(R.id.templateName).text = exercise.name
-            view.findViewById<CheckBox>(R.id.checkBox).apply {
-                isChecked = isSelected
-                setOnCheckedChangeListener { _, isChecked ->
-                    onSelect(exercise, isChecked)
-                }
+            view.setOnLongClickListener {
+                onItemLongClick(exercise)
+                true
             }
         }
     }
@@ -32,29 +27,10 @@ class ExerciseAdapter(
     }
 
     override fun onBindViewHolder(holder: ExerciseViewHolder, position: Int) {
-        val isSelected = selectedPositions.contains(position)
-        holder.bind(exercises[position], isSelected) { exercise, isChecked ->
-            if (isChecked) {
-                selectedPositions.add(position)
-            } else {
-                selectedPositions.remove(position)
-            }
-            onSelect(exercise, isChecked)
-        }
+        holder.bind(exercises[position], onItemLongClick)
     }
 
     override fun getItemCount(): Int = exercises.size
-
-    fun updateExercises(newExercises: List<Exercise>) {
-        this.exercises.clear()
-        this.exercises.addAll(newExercises)
-        notifyDataSetChanged()
-    }
-
-    fun removeItem(exercise: Exercise) {
-        exercises = exercises.filter { it.id != exercise.id }.toMutableList()
-        notifyDataSetChanged()
-    }
 
     fun setItems(newItems: List<Exercise>) {
         exercises.clear()
@@ -65,5 +41,13 @@ class ExerciseAdapter(
     fun addItem(exercise: Exercise) {
         exercises.add(exercise)
         notifyItemInserted(exercises.size - 1)
+    }
+
+    fun removeItem(exercise: Exercise) {
+        val position = exercises.indexOf(exercise)
+        if (position >= 0) {
+            exercises.removeAt(position)
+            notifyItemRemoved(position)
+        }
     }
 }

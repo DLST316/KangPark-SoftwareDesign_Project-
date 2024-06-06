@@ -27,7 +27,7 @@ class ListActivity : AppCompatActivity() {
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = ExerciseAdapter(mutableListOf()) { exercise, _ -> showDeleteConfirmationDialog(exercise) }
+        adapter = ExerciseAdapter(mutableListOf()) { exercise -> showDeleteConfirmationDialog(exercise) }
         recyclerView.adapter = adapter
 
         binding.addButton.setOnClickListener {
@@ -35,7 +35,7 @@ class ListActivity : AppCompatActivity() {
         }
 
         binding.backButton.setOnClickListener {
-            finish() // 현재 Activity를 종료하고 이전 화면으로 돌아갑니다.
+            finish()
         }
 
         loadData()
