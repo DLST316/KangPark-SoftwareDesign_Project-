@@ -1,5 +1,6 @@
 package com.kang.termproject2
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
@@ -29,6 +30,7 @@ class RecordExerciseActivity : AppCompatActivity() {
         findViewById<Button>(R.id.saveButton).setOnClickListener {
             // 데이터 저장 로직 추가
             Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show()
+            navigateToMainActivity()
         }
     }
 
@@ -52,5 +54,12 @@ class RecordExerciseActivity : AppCompatActivity() {
         }
 
         exerciseContainer.addView(exerciseView)
+    }
+
+    private fun navigateToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
     }
 }
