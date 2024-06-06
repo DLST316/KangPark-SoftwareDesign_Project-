@@ -4,22 +4,27 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.launch
 
 class RecordExerciseActivity : AppCompatActivity() {
 
     private lateinit var selectedExercises: List<Exercise>
     private lateinit var exerciseContainer: LinearLayout
+    private lateinit var database: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_record_exercise)
 
+        database = AppDatabase.getDatabase(this)
         exerciseContainer = findViewById(R.id.exerciseContainer)
 
         val exercisesJson = intent.getStringExtra("selected_exercises")
@@ -28,7 +33,7 @@ class RecordExerciseActivity : AppCompatActivity() {
         loadSelectedExercises()
 
         findViewById<Button>(R.id.saveButton).setOnClickListener {
-            // 데이터 저장 로직 추가
+            saveExerciseRecords()
             Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show()
             navigateToMainActivity()
         }
@@ -54,6 +59,33 @@ class RecordExerciseActivity : AppCompatActivity() {
         }
 
         exerciseContainer.addView(exerciseView)
+    }
+
+    private fun saveExerciseRecords() {
+        for (i in 0 until exerciseContainer.childCount) {
+            val exerciseView = exerciseContainer.getChildAt(i)
+            val exerciseName = exerciseView.findViewById<TextView>(R.id.exerciseName).text.toString()
+            val setsContainer = exerciseView.findViewById<LinearLayout>(R.id.setsContainer)
+
+            val exerciseId = selectedExercises.first { it.name == exerciseName }.id
+
+            for (j in 0 until setsContainer.childCount) {
+                val setView = setsContainer.getChildAt(j)
+                val weight = setView.findViewById<EditText>(R.id.weightInput).text.toString().toFloat()  // Float으로 유지
+                val reps = setView.findViewById<EditText>(R.id.repsInput).text.toString().toInt()
+
+                val exerciseRecord = ExerciseRecord(
+                    exerciseId = exerciseId,
+                    weight = weight,
+                    reps = reps,
+                    timestamp = System.currentTimeMillis()
+                )
+
+                lifecycleScope.launch {
+                    database.exerciseRecordDao().insert(exerciseRecord)
+                }
+            }
+        }
     }
 
     private fun navigateToMainActivity() {

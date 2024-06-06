@@ -24,6 +24,7 @@
         <activity android:name=".ListActivity"/>
         <activity android:name=".SelectExerciseActivity"/>
         <activity android:name=".RecordExerciseActivity"/>
+        <activity android:name=".ExerciseHistoryActivity"/>
     </application>
 
 </manifest>
