@@ -56,6 +56,7 @@ class RecordExerciseActivity : AppCompatActivity() {
         exerciseView.findViewById<TextView>(R.id.exerciseName).text = exercise.name
 
         val addSetButton = exerciseView.findViewById<Button>(R.id.addSetButton)
+        val deleteExerciseButton = exerciseView.findViewById<Button>(R.id.deleteExerciseButton)
         val setsContainer = exerciseView.findViewById<LinearLayout>(R.id.setsContainer)
 
         addSetButton.setOnClickListener {
@@ -64,6 +65,11 @@ class RecordExerciseActivity : AppCompatActivity() {
                 setsContainer.removeView(setView)
             }
             setsContainer.addView(setView)
+        }
+
+        deleteExerciseButton.setOnClickListener {
+            exerciseContainer.removeView(exerciseView)
+            selectedExercises = selectedExercises.filter { it.name != exercise.name }
         }
 
         exerciseContainer.addView(exerciseView)
