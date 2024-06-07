@@ -27,8 +27,8 @@ class ExerciseHistoryActivity : AppCompatActivity() {
 
     private fun loadExerciseHistory() {
         lifecycleScope.launch {
-            val exerciseRecords = database.exerciseRecordDao().getAll()
-            adapter = ExerciseHistoryAdapter(exerciseRecords)
+            val detailedRecords = database.exerciseRecordDao().getAllDetailedRecords()
+            adapter = ExerciseHistoryAdapter(detailedRecords)
             recyclerView.adapter = adapter
         }
     }

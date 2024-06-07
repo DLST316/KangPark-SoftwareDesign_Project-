@@ -12,5 +12,10 @@ interface ExerciseRecordDao {
     @Insert
     suspend fun insert(exerciseRecord: ExerciseRecord)
 
-
+    @Query("""
+        SELECT exercise_records.id, exercises.name AS exerciseName, exercise_records.weight, exercise_records.reps, exercise_records.timestamp
+        FROM exercise_records
+        INNER JOIN exercises ON exercise_records.exerciseId = exercises.id
+    """)
+    suspend fun getAllDetailedRecords(): List<DetailedExerciseRecord>
 }

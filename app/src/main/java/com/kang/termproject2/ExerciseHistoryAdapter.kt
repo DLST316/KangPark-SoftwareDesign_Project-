@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.Date
 
 class ExerciseHistoryAdapter(
-    private var exerciseRecords: List<ExerciseRecord>
+    private var exerciseRecords: List<DetailedExerciseRecord>
 ) : RecyclerView.Adapter<ExerciseHistoryAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -25,15 +25,15 @@ class ExerciseHistoryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val record = exerciseRecords[position]
-        holder.exerciseName.text = record.exerciseId.toString() // 실제 이름을 매핑하려면 추가 작업 필요
-        holder.weight.text = record.weight.toString()
-        holder.reps.text = record.reps.toString()
+        holder.exerciseName.text = record.exerciseName
+        holder.weight.text = "${record.weight} kg"
+        holder.reps.text = "${record.reps} 회"
         holder.timestamp.text = Date(record.timestamp).toString()
     }
 
     override fun getItemCount() = exerciseRecords.size
 
-    fun updateExerciseRecords(newRecords: List<ExerciseRecord>) {
+    fun updateExerciseRecords(newRecords: List<DetailedExerciseRecord>) {
         exerciseRecords = newRecords
         notifyDataSetChanged()
     }
