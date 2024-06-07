@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
@@ -33,9 +34,13 @@ class RecordExerciseActivity : AppCompatActivity() {
         loadSelectedExercises()
 
         findViewById<Button>(R.id.saveButton).setOnClickListener {
-            saveExerciseRecords()
-            Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show()
-            navigateToMainActivity()
+            if (hasEmptyFields()) {
+                showEmptyFieldsDialog()
+            } else {
+                saveExerciseRecords()
+                Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show()
+                navigateToMainActivity()
+            }
         }
     }
 
@@ -55,13 +60,45 @@ class RecordExerciseActivity : AppCompatActivity() {
 
         addSetButton.setOnClickListener {
             val setView = inflater.inflate(R.layout.item_set_input, setsContainer, false)
+            setView.findViewById<Button>(R.id.deleteSetButton).setOnClickListener {
+                setsContainer.removeView(setView)
+            }
             setsContainer.addView(setView)
         }
 
         exerciseContainer.addView(exerciseView)
     }
 
-    private fun saveExerciseRecords() {
+    private fun hasEmptyFields(): Boolean {
+        for (i in 0 until exerciseContainer.childCount) {
+            val exerciseView = exerciseContainer.getChildAt(i)
+            val setsContainer = exerciseView.findViewById<LinearLayout>(R.id.setsContainer)
+            for (j in 0 until setsContainer.childCount) {
+                val setView = setsContainer.getChildAt(j)
+                val weightInput = setView.findViewById<EditText>(R.id.weightInput).text.toString()
+                val repsInput = setView.findViewById<EditText>(R.id.repsInput).text.toString()
+                if (weightInput.isBlank() || repsInput.isBlank()) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun showEmptyFieldsDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("빈 입력 필드")
+            .setMessage("빈칸인 부분은 기록이 전혀 되지 않습니다. 계속하시겠습니까?")
+            .setPositiveButton("확인") { _, _ ->
+                saveExerciseRecords(skipEmptyFields = true)
+                Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show()
+                navigateToMainActivity()
+            }
+            .setNegativeButton("취소", null)
+            .show()
+    }
+
+    private fun saveExerciseRecords(skipEmptyFields: Boolean = false) {
         for (i in 0 until exerciseContainer.childCount) {
             val exerciseView = exerciseContainer.getChildAt(i)
             val exerciseName = exerciseView.findViewById<TextView>(R.id.exerciseName).text.toString()
@@ -71,8 +108,15 @@ class RecordExerciseActivity : AppCompatActivity() {
 
             for (j in 0 until setsContainer.childCount) {
                 val setView = setsContainer.getChildAt(j)
-                val weight = setView.findViewById<EditText>(R.id.weightInput).text.toString().toFloat()  // Float으로 유지
-                val reps = setView.findViewById<EditText>(R.id.repsInput).text.toString().toInt()
+                val weightInput = setView.findViewById<EditText>(R.id.weightInput).text.toString()
+                val repsInput = setView.findViewById<EditText>(R.id.repsInput).text.toString()
+
+                if (skipEmptyFields && (weightInput.isBlank() || repsInput.isBlank())) {
+                    continue
+                }
+
+                val weight = weightInput.toFloatOrNull() ?: continue
+                val reps = repsInput.toIntOrNull() ?: continue
 
                 val exerciseRecord = ExerciseRecord(
                     exerciseId = exerciseId,
