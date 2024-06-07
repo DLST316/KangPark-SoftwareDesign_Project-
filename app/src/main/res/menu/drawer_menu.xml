@@ -1,0 +1,40 @@
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="테마">
+        <menu>
+            <item
+                android:id="@+id/nav_theme_switch"
+                android:title="Dark Mode"
+                app:actionLayout="@layout/switch_layout"
+                android:checkable="false"/>
+        </menu>
+    </item>
+
+    <item android:title="운동 영상 보기"
+        android:id="@+id/nav_youtube"
+        android:icon="@drawable/ic_show">
+        <menu>
+            <item
+                android:id="@+id/nav_video1"
+                android:icon="@drawable/ic_show"
+                android:title="Deadlift"/>
+            <item
+                android:id="@+id/nav_video2"
+                android:icon="@drawable/ic_show"
+                android:title="Squat"/>
+            <item
+                android:id="@+id/nav_video3"
+                android:icon="@drawable/ic_show"
+                android:title="Bench Press"/>
+            <item
+                android:id="@+id/nav_video4"
+                android:icon="@drawable/ic_show"
+                android:title="Pull-up"/>
+            <item
+                android:id="@+id/nav_video5"
+                android:icon="@drawable/ic_show"
+                android:title="Push-up"/>
+        </menu>
+    </item>
+</menu>
