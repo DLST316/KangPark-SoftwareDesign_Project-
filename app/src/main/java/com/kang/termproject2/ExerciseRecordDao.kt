@@ -18,4 +18,11 @@ interface ExerciseRecordDao {
         INNER JOIN exercises ON exercise_records.exerciseId = exercises.id
     """)
     suspend fun getAllDetailedRecords(): List<DetailedExerciseRecord>
+
+    @Query("""
+        DELETE FROM exercise_records 
+        WHERE timestamp >= :startTimestamp 
+        AND timestamp < :endTimestamp
+    """)
+    suspend fun deleteRecordsByTimestampRange(startTimestamp: Long, endTimestamp: Long)
 }

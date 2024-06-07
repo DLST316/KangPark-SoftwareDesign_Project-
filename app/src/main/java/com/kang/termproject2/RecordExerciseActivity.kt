@@ -139,7 +139,7 @@ class RecordExerciseActivity : AppCompatActivity() {
                     timestamp = System.currentTimeMillis()
                 )
 
-                lifecycleScope.launch {
+                lifecycleScope.launch {//코루틴
                     database.exerciseRecordDao().insert(exerciseRecord)
                 }
             }
@@ -147,7 +147,7 @@ class RecordExerciseActivity : AppCompatActivity() {
     }
 
     private fun showAddExerciseDialog() {
-        lifecycleScope.launch {
+        lifecycleScope.launch {// 코루틴사용
             val allExercises = database.exerciseDao().getAll()
             val availableExercises = allExercises.filter { exercise ->
                 selectedExercises.none { it.name == exercise.name }

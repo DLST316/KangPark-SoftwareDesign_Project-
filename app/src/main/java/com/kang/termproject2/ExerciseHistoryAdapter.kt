@@ -1,5 +1,7 @@
 package com.kang.termproject2
 
+import android.app.AlertDialog
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +11,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ExerciseHistoryAdapter(
-    private var exerciseRecords: List<DetailedExerciseRecord>
+    private var exerciseRecords: List<DetailedExerciseRecord>,
+    private val context: Context,
+    private val onDelete: (ExerciseSession) -> Unit
 ) : RecyclerView.Adapter<ExerciseHistoryAdapter.ViewHolder>() {
 
     private val expandedItems = mutableSetOf<Int>()
@@ -48,6 +52,19 @@ class ExerciseHistoryAdapter(
             }
         }
 
+        // Long click listener for deleting a specific session
+        holder.timestamp.setOnLongClickListener {
+            AlertDialog.Builder(context)
+                .setTitle("삭제 확인")
+                .setMessage("이 날짜의 모든 운동 기록을 삭제하시겠습니까?")
+                .setPositiveButton("삭제") { _, _ ->
+                    onDelete(session)
+                }
+                .setNegativeButton("취소", null)
+                .show()
+            true
+        }
+
         // Populate detail container
         if (isExpanded) {
             holder.detailContainer.removeAllViews()
@@ -76,14 +93,12 @@ class ExerciseHistoryAdapter(
 
         sortedRecords.forEach { record ->
             if (currentSession == null || record.timestamp / 60000 != currentSession!!.timestamp / 60000) {
-                // 1분 단위로 그룹화하여 새로운 세션을 시작합니다.
                 currentSession = ExerciseSession(
                     timestamp = record.timestamp,
                     exercises = mutableListOf()
                 )
                 sessions.add(currentSession!!)
             }
-            // 같은 세션에 기록을 추가합니다.
             val exerciseDetail = currentSession!!.exercises.find { it.name == record.exerciseName }
             if (exerciseDetail != null) {
                 exerciseDetail.records += "\n${record.weight} kg ${record.reps} 회"

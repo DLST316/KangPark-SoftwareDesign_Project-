@@ -55,7 +55,7 @@ class SelectExerciseActivity : AppCompatActivity() {
     }
 
     private fun loadExercises() {
-        lifecycleScope.launch {
+        lifecycleScope.launch {//코루틴을 사용해서 UI반응성 높임
             val exercises = database.exerciseDao().getAll()
             exerciseAdapter.setItems(exercises)
         }

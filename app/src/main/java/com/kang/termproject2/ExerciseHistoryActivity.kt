@@ -39,8 +39,19 @@ class ExerciseHistoryActivity : AppCompatActivity() {
     private fun loadExerciseHistory() {
         lifecycleScope.launch {
             val detailedRecords = database.exerciseRecordDao().getAllDetailedRecords()
-            adapter = ExerciseHistoryAdapter(detailedRecords)
+            adapter = ExerciseHistoryAdapter(detailedRecords, this@ExerciseHistoryActivity) { session ->
+                deleteRecordsBySession(session)
+            }
             recyclerView.adapter = adapter
+        }
+    }
+
+    private fun deleteRecordsBySession(session: ExerciseSession) {
+        val startTimestamp = session.timestamp
+        val endTimestamp = startTimestamp + 60 * 1000  // Assuming sessions are grouped by minute
+        lifecycleScope.launch {
+            database.exerciseRecordDao().deleteRecordsByTimestampRange(startTimestamp, endTimestamp)
+            loadExerciseHistory()
         }
     }
 }
