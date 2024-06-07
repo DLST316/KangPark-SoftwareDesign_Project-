@@ -17,8 +17,18 @@
     </ScrollView>
 
     <Button
+        android:id="@+id/addExerciseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="운동 추가"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp" />
+
+    <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="저장" />
+        android:text="저장"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp" />
 </LinearLayout>

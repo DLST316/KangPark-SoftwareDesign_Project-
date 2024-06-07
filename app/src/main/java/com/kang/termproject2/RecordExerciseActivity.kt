@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class RecordExerciseActivity : AppCompatActivity() {
 
-    private lateinit var selectedExercises: List<Exercise>
+    private lateinit var selectedExercises: MutableList<Exercise>
     private lateinit var exerciseContainer: LinearLayout
     private lateinit var database: AppDatabase
 
@@ -29,7 +29,7 @@ class RecordExerciseActivity : AppCompatActivity() {
         exerciseContainer = findViewById(R.id.exerciseContainer)
 
         val exercisesJson = intent.getStringExtra("selected_exercises")
-        selectedExercises = Gson().fromJson(exercisesJson, object : TypeToken<List<Exercise>>() {}.type)
+        selectedExercises = Gson().fromJson(exercisesJson, object : TypeToken<MutableList<Exercise>>() {}.type)
 
         loadSelectedExercises()
 
@@ -41,6 +41,10 @@ class RecordExerciseActivity : AppCompatActivity() {
                 Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show()
                 navigateToMainActivity()
             }
+        }
+
+        findViewById<Button>(R.id.addExerciseButton).setOnClickListener {
+            showAddExerciseDialog()
         }
     }
 
@@ -68,8 +72,12 @@ class RecordExerciseActivity : AppCompatActivity() {
         }
 
         deleteExerciseButton.setOnClickListener {
-            exerciseContainer.removeView(exerciseView)
-            selectedExercises = selectedExercises.filter { it.name != exercise.name }
+            if (exerciseContainer.childCount > 1) {
+                exerciseContainer.removeView(exerciseView)
+                selectedExercises = selectedExercises.filter { it.name != exercise.name }.toMutableList()
+            } else {
+                Toast.makeText(this, "운동을 하나 이상 남겨두어야 합니다.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         exerciseContainer.addView(exerciseView)
@@ -135,6 +143,31 @@ class RecordExerciseActivity : AppCompatActivity() {
                     database.exerciseRecordDao().insert(exerciseRecord)
                 }
             }
+        }
+    }
+
+    private fun showAddExerciseDialog() {
+        lifecycleScope.launch {
+            val allExercises = database.exerciseDao().getAll()
+            val availableExercises = allExercises.filter { exercise ->
+                selectedExercises.none { it.name == exercise.name }
+            }
+
+            if (availableExercises.isEmpty()) {
+                Toast.makeText(this@RecordExerciseActivity, "추가할 수 있는 운동이 없습니다.", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            val exerciseNames = availableExercises.map { it.name }.toTypedArray()
+
+            AlertDialog.Builder(this@RecordExerciseActivity)
+                .setTitle("운동 추가")
+                .setItems(exerciseNames) { _, which ->
+                    val selectedExercise = availableExercises[which]
+                    selectedExercises.add(selectedExercise)
+                    addExerciseInput(selectedExercise)
+                }
+                .show()
         }
     }
 
