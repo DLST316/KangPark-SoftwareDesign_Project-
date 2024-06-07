@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.recyclerview)
     kapt(libs.androidx.room.compiler) // Room 컴파일러 추가
     implementation("com.google.code.gson:gson:2.8.8")  // 추가된 라인
 

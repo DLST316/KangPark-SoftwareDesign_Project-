@@ -1,11 +1,15 @@
 package com.kang.termproject2
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ExerciseHistoryActivity : AppCompatActivity() {
 
@@ -21,6 +25,8 @@ class ExerciseHistoryActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.historyRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+
 
         loadExerciseHistory()
     }
