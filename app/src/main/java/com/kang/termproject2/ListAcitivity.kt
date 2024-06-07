@@ -92,7 +92,7 @@ class ListActivity : AppCompatActivity() {
 
     private fun deleteItem(exercise: Exercise) {
         lifecycleScope.launch {
-            database.exerciseDao().delete(exercise)
+            database.exerciseDao().deleteById(exercise.id)
             adapter.removeItem(exercise)
         }
     }
