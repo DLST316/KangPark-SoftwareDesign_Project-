@@ -3,6 +3,7 @@ package com.kang.termproject2
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,11 +36,21 @@ class SelectExerciseActivity : AppCompatActivity() {
 
         loadExercises()
 
-        val confirmButton = findViewById<Button>(R.id.confirmButton)
-        confirmButton.setOnClickListener {
-            val intent = Intent(this, RecordExerciseActivity::class.java)
-            intent.putExtra("selected_exercises", Gson().toJson(selectedExercises))
+        findViewById<Button>(R.id.confirmButton).setOnClickListener {
+            if (selectedExercises.isEmpty()) {
+                Toast.makeText(this, "적어도 하나의 운동을 선택해야 합니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                val intent = Intent(this, RecordExerciseActivity::class.java)
+                intent.putExtra("selected_exercises", Gson().toJson(selectedExercises))
+                startActivity(intent)
+            }
+        }
+
+        findViewById<Button>(R.id.backToMainButton).setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+            finish()
         }
     }
 
