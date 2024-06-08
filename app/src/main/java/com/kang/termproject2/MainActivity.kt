@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -50,21 +51,6 @@ class MainActivity : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
-
-        binding.btnOpenListActivity.setOnClickListener {
-            val intent = Intent(this, ListActivity::class.java)
-            startActivity(intent)
-        }
-
-        binding.btnStartWorkout.setOnClickListener {
-            val intent = Intent(this, SelectExerciseActivity::class.java)
-            startActivity(intent)
-        }
-
-        binding.btnViewHistory.setOnClickListener {
-            val intent = Intent(this, ExerciseHistoryActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     private fun setupDrawerToggle() {
@@ -99,6 +85,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun openYouTubeLink(videoUrl: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
+        startActivity(intent)
+    }
+
+    fun onOpenListActivity(view: View) {
+        val intent = Intent(this, ListActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun onStartWorkout(view: View) {
+        val intent = Intent(this, SelectExerciseActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun onViewHistory(view: View) {
+        val intent = Intent(this, ExerciseHistoryActivity::class.java)
         startActivity(intent)
     }
 }
