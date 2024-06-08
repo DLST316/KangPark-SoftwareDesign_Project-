@@ -41,11 +41,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.nav_video1 -> showConfirmationDialog("https://youtu.be/링크1")
-                R.id.nav_video2 -> showConfirmationDialog("https://youtu.be/링크2")
-                R.id.nav_video3 -> showConfirmationDialog("https://youtu.be/링크3")
-                R.id.nav_video4 -> showConfirmationDialog("https://youtu.be/링크4")
-                R.id.nav_video5 -> showConfirmationDialog("https://youtu.be/링크5")
+                R.id.nav_video1 -> showConfirmationDialog("https://www.youtube.com/watch?v=XxWcirHIwVo&ab_channel=JeremyEthier")
+                R.id.nav_video2 -> showConfirmationDialog("https://www.youtube.com/watch?v=gcNh17Ckjgg&ab_channel=JeremyEthier")
+                R.id.nav_video3 -> showConfirmationDialog("https://www.youtube.com/watch?v=4Y2ZdHCOXok&ab_channel=JeremyEthier")
+                R.id.nav_video4 -> showConfirmationDialog("https://www.youtube.com/watch?v=eGo4IYlbE5g&ab_channel=Calisthenicmovement")
+                R.id.nav_video5 -> showConfirmationDialog("https://www.youtube.com/watch?v=IODxDxX7oi4&ab_channel=Calisthenicmovement")
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
