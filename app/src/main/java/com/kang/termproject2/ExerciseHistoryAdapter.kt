@@ -92,7 +92,7 @@ class ExerciseHistoryAdapter(
         var currentSession: ExerciseSession? = null
 
         sortedRecords.forEach { record ->
-            if (currentSession == null || record.timestamp / 60000 != currentSession!!.timestamp / 60000) {
+            if (currentSession == null || record.timestamp / 10000 != currentSession!!.timestamp / 10000) {
                 currentSession = ExerciseSession(
                     timestamp = record.timestamp,
                     exercises = mutableListOf()
